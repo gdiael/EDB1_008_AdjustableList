@@ -1,0 +1,5 @@
+bin/TestList.exe
+bin/TestList
+build/LinkedList.o
+build/TestList.o
+build/main.o

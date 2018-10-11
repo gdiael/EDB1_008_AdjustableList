@@ -40,6 +40,12 @@ public:
 	int getCount();
 	
 	void setCount(int);
+
+    bool isInserted();
+
+    void Insert(Node* nPrev, Node* nNext);
+
+    void Remove();
 };
 
 template<typename T>
@@ -94,6 +100,41 @@ template<typename T>
 void Node<T>::setCount(int c)
 {
 	this->count = c;
+}
+
+template<typename T>
+bool Node<T>::isInserted()
+{
+    return (this->prev != NULL && this->next != NULL);
+}
+
+template<typename T>
+void Node<T>::Insert(Node* nPrev, Node* nNext)
+{
+    if(nPrev == NULL || nNext == NULL){
+        std::cerr << "Não é possível inserir o Nó! Foi passado um ponteiro Nulo" << std::endl;
+        return;
+    };
+    // posicionamento do nó
+    this->prev = nPrev;
+    this->next = nNext;
+    // atualização dos nós companheiros
+    this->prev->setNext(this);
+    this->next->setPrevious(this);
+}
+
+template<typename T>
+void Node<T>::Remove()
+{
+    if(!this->isInserted()){
+        std::cerr << "Não é possível remover o Nó! Ele não foi inserido corretamente!" << std::endl;
+    };
+    // atualiza companheiros
+    this->prev->setNext(this->next);
+    this->next->setPrevious(this->prev);
+    // atualiza ponteiros internos
+    this->prev = NULL;
+    this->next = NULL;
 }
 
 #endif /* defined(__LinkedList__Node__) */

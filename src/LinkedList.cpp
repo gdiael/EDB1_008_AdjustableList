@@ -174,13 +174,46 @@ bool LinkedList::insertEnd(string s)
 
 bool LinkedList::insert(int i, string s)
 {
+    if( i < 1 || i > this->quantity+1)
+    {
+        std::cerr << "Valor do índice de inserção deve estar entre [1, " << this->quantity+1 << "]." << std::endl;
+        return false;
+    }
+		
+    int counter = 1;
+    
+    for(Node<string>* n = this->head; n != this->tail; n = n->getNext())
+    {
+        if( i == counter )
+        {
+            Node<string>* novo = new Node<string>(s);
+			novo->Insert(n, n->getNext());
+			this->quantity++;
+            return true;
+        }
+        counter++;
+    }
+    
     return false;
 }
 
 bool LinkedList::insertOrdered(string s)
 {
-    std::cout << "\tERRO: LinkedList::insertOrdered - not yet implemented.\n";
-    return false;
+		
+    int counter = 1;
+    Node<string>* n = this->head->getNext();
+    while(n != this->tail){
+        if(n->getValue() > s){
+            break;
+        };
+        n = n->getNext();
+        counter++;
+    };
+
+    Node<string>* novo = new Node<string>(s);
+    novo->Insert(n->getPrevious(), n);
+    this->quantity++;
+    return true;
 }
 
 Node<string>* LinkedList::searchCF(string s)
