@@ -83,6 +83,19 @@ string LinkedList::get(int i)
 
 int LinkedList::search(string s)
 {
+    // implementação de busca sequencial
+	int counter = 1;
+    
+    for(Node<string>* n = this->head->getNext(); n != this->tail; n = n->getNext())
+    {
+        if( s == n->getValue() )
+        {
+            return counter;
+        }
+        counter++;
+    }
+
+	// std::cerr << "A string [" << s << "] não foi encontrada na lista encadeada!" << std::endl;
     return -1;
 }
 
@@ -164,12 +177,18 @@ ListStatus LinkedList::checkConsistency()
 
 bool LinkedList::insertBegin(string s)
 {
-	return false;
+	Node<string>* novo = new Node<string>(s);
+	novo->InsertAfter(this->head);
+   	this->quantity++;
+    return true;
 }
 
 bool LinkedList::insertEnd(string s)
 {
-    return false;
+	Node<string>* novo = new Node<string>(s);
+	novo->InsertBefore(this->tail);
+	this->quantity++;
+    return true;
 }
 
 bool LinkedList::insert(int i, string s)
@@ -187,7 +206,7 @@ bool LinkedList::insert(int i, string s)
         if( i == counter )
         {
             Node<string>* novo = new Node<string>(s);
-			novo->Insert(n, n->getNext());
+			novo->InsertAfter(n);
 			this->quantity++;
             return true;
         }
@@ -198,47 +217,121 @@ bool LinkedList::insert(int i, string s)
 }
 
 bool LinkedList::insertOrdered(string s)
-{
-		
-    int counter = 1;
+{	
     Node<string>* n = this->head->getNext();
     while(n != this->tail){
         if(n->getValue() > s){
             break;
         };
         n = n->getNext();
-        counter++;
     };
 
     Node<string>* novo = new Node<string>(s);
-    novo->Insert(n->getPrevious(), n);
+    novo->InsertBefore(n);
     this->quantity++;
     return true;
 }
 
 Node<string>* LinkedList::searchCF(string s)
 {
-	std::cout << "\tERRO: LinkedList::searchCF - not yet implemented.\n";
-    return nullptr;
+	Node<string>* n = this->head->getNext();
+    while(n != this->tail){
+        if(n->getValue() == s){
+            break;
+        };
+        n = n->getNext();
+    };
+    if(n == this->tail){
+        // cerr << "O elemento [" << s << "] não foi encontrado na lista encadeada!" << endl;
+        return nullptr;
+    };
+    n->setCount(n->getCount()+1);
+    Node<string>* p = n->getPrevious();
+    while(n->getCount() > p->getCount() && p != this->head){
+        p = p->getPrevious();
+    };
+    if(p != n->getPrevious()){
+        n->Remove();
+        n->InsertAfter(p);
+    }
+    return n;
 }
 
 Node<string>* LinkedList::searchMF(string s)
 {
-	std::cout << "\tERRO: LinkedList::searchMF - not yet implemented.\n";
-    return nullptr;
+    Node<string>* n = this->head->getNext();
+    while(n != this->tail){
+        if(n->getValue() == s){
+            break;
+        };
+        n = n->getNext();
+    };
+    if(n == this->tail){
+        // cerr << "O elemento [" << s << "] não foi encontrado na lista encadeada!" << endl;
+        return nullptr;
+    };
+	n->Remove();
+    n->InsertAfter(this->head);
+    return n;
 }
 
 string LinkedList::removeEnd(void)
 {
-    return "";
+	if( this->isEmpty())
+	{
+		std::cerr << "A lista está vazia, não há elementos a remover!" << std::endl;
+        return "";
+	};
+    Node<string>* toRemove = this->tail->getPrevious();
+	string str = toRemove->getValue();
+	toRemove->Remove();
+	delete toRemove;
+	this->quantity--;
+    return str;
 }
 
 string LinkedList::removeBegin(void)
 {
-    return "";
+	if( this->isEmpty())
+	{
+		std::cerr << "A lista está vazia, não há elementos a remover!" << std::endl;
+        return "";
+	};
+    Node<string>* toRemove = this->head->getNext();
+	string str = toRemove->getValue();
+	toRemove->Remove();
+	delete toRemove;
+	this->quantity--;
+    return str;
 }
 
 string LinkedList::remove(int indice)
 {
+    if( indice < 1 || indice > this->quantity)
+    {
+        std::cerr << "Valor do índice para remoção deve estar entre [1, " << this->quantity << "]." << std::endl;
+        return "";
+    };
+	if( this->isEmpty() )
+	{
+		std::cerr << "A lista está vazia, não há elementos a remover!" << std::endl;
+        return "";
+	};
+		
+    int counter = 1;
+    
+    for(Node<string>* n = this->head->getNext(); n != this->tail; n = n->getNext())
+    {
+        if( indice == counter )
+        {
+            string str = n->getValue();
+			n->Remove();
+			delete n;
+			this->quantity--;
+            return str;
+        }
+        counter++;
+    };
+    
     return "";
 }

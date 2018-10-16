@@ -43,7 +43,9 @@ public:
 
     bool isInserted();
 
-    void Insert(Node* nPrev, Node* nNext);
+    void InsertAfter(Node* nPrev);
+
+    void InsertBefore(Node* nNext);
 
     void Remove();
 };
@@ -109,8 +111,25 @@ bool Node<T>::isInserted()
 }
 
 template<typename T>
-void Node<T>::Insert(Node* nPrev, Node* nNext)
+void Node<T>::InsertAfter(Node* nPrev)
 {
+    Node* nNext = nPrev->getNext();
+    if(nPrev == NULL || nNext == NULL){
+        std::cerr << "Não é possível inserir o Nó! Foi passado um ponteiro Nulo" << std::endl;
+        return;
+    };
+    // posicionamento do nó
+    this->prev = nPrev;
+    this->next = nNext;
+    // atualização dos nós companheiros
+    this->prev->setNext(this);
+    this->next->setPrevious(this);
+}
+
+template<typename T>
+void Node<T>::InsertBefore(Node* nNext)
+{
+    Node* nPrev = nNext->getPrevious();
     if(nPrev == NULL || nNext == NULL){
         std::cerr << "Não é possível inserir o Nó! Foi passado um ponteiro Nulo" << std::endl;
         return;

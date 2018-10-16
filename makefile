@@ -1,9 +1,10 @@
 # Arquivo de Script Makefile
+# Inplementado para a linguagem  C++
 # 
 # Aula de LP1 2018.2
 # 20/09/2018
 # Clonagem atual para teste :
-# 				git clone https://github.com/gdiael/LP01_005_JogoDadosII.git
+# 				git clone https://github.com/gdiael/EDB1_008_AdjustableList.git
 #
 # Gdiael Souto Barros
 #
@@ -62,8 +63,8 @@ run: all
 # não usar o comando Make e sim o executável: mingw32-make.exe
 
 mkdirswin:
-	if not exist bin mkdir bin
-	if not exist build mkdir build
+	if not exist $(BIN) mkdir "$(BIN)
+	if not exist $(OBJ) mkdir "$(OBJ)
 
 runwin: mkdirswin $(PROG1)
 	chcp 65001
@@ -72,5 +73,5 @@ runwin: mkdirswin $(PROG1)
 debugwin: cleanwin db$(PROG1)
 
 cleanwin: 
-	del /q bin\*
-	del /q build\*
+	del /q "$(BIN)\*
+	del /q "$(OBJ)\*
